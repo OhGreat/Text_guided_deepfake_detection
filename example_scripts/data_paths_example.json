@@ -1,0 +1,18 @@
+{
+    "Dataset_1": {
+        "real": ["path/to/real/data"],
+        "fake": ["path/to/fake/data"]
+    },
+    "Dataset_2": {
+        "real": ["path/to/real/data"],
+        "fake": ["path/to/fake/data"]
+    },
+    "Dataset_3": {
+        "real": [],
+        "fake": ["path/to/fake/data"]
+    },
+    "Dataset_4": {
+        "real": ["path/to/real/data"],
+        "fake": []
+    }
+}
