@@ -44,9 +44,8 @@ def create_trainer(
             real_img_folders=opts.real_eval,
             fake_img_folders=opts.fake_eval,
             max_samples_per_class=opts.max_samples_per_class_eval,
-            max_tot_samples=opts.max_val_samples,
             transform=visual_transforms,
-            testing=True
+            testing=True,
         )
         valid_dl = DataLoader(
             valid_ds,
@@ -61,14 +60,12 @@ def create_trainer(
             real_img_folders=opts.real_train,
             fake_img_folders=opts.fake_train,
             max_samples_per_class=opts.max_samples_per_class_train,
-            max_tot_samples=opts.max_tot_samples,
             transform=visual_transforms,
         )
 
         if opts.valid_frac is not None:
             print("Splitting train set for validation.")
-            train_ds, valid_ds = split_dataset(
-                train_ds, opts.valid_frac, opts.seed)
+            train_ds, valid_ds = split_dataset(train_ds, opts.valid_frac, opts.seed)
 
         else:
             print("Validation data paths provided.")
@@ -76,7 +73,6 @@ def create_trainer(
                 real_img_folders=opts.real_eval,
                 fake_img_folders=opts.fake_eval,
                 max_samples_per_class=opts.max_samples_per_class_eval,
-                max_tot_samples=opts.max_val_samples,
                 transform=visual_transforms,
             )
 
@@ -210,6 +206,14 @@ def evaluate(
     # Load model weights with interpolation possibility
     if opts.resume is not None:
         weights = torch.load(opts.resume)
+        # FIX to evaluate older configurations
+        if "fake_prompts" not in weights["state_dict"].keys():
+            weights["state_dict"]["fake_prompts"] = torch.randint(0,1,size=(1,77))
+            weights["state_dict"]["real_prompts"] = torch.randint(0,1,size=(1,77))
+            weights["state_dict"]["prompt_feats"] = torch.randint(0,1,size=(2,77))
+            weights["state_dict"]["labels"] = torch.tensor([0,1], dtype=torch.int)
+            weights["state_dict"]["class_weights"] = torch.tensor([1.,0.5], dtype=torch.float16)
+
         l_model.load_state_dict(weights["state_dict"])
         weights = l_model.model.state_dict()
 

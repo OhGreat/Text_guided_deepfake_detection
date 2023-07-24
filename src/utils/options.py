@@ -45,7 +45,6 @@ def get_opts() -> argparse.Namespace:
     parser.add_argument("--fake_prompts", type=str, default=None, help="Path to file with fake image prompts.")
     parser.add_argument("--max_samples_per_class_train", type=int, default=None, help="Limits the number of training samples for each class (real/fake).")
     parser.add_argument("--max_samples_per_class_eval", type=int, default=None, help="Limits the number of evaluation samples for each class (real/fake).")
-    parser.add_argument("--max_tot_samples", type=int, default=None, help="Limit the number of samples of the total train dataset with Pytorch Linghting.")
     parser.add_argument("--max_val_samples", type=int, default=None, help="Limit the number of samples of the total validation dataset with Pytorch Linghting.")
     parser.add_argument("--valid_frac", type=float, default=None, help="Size of the validation split when 'real_eval' and 'fake_eval' are not provided.")
     parser.add_argument("--train_batch_size", type=int, default=16)

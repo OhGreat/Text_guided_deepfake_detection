@@ -66,26 +66,26 @@ class CLIPLightning(L.LightningModule):
         # block gradients to text transformer if we only want to train the vision model
         self.model.transformer.requires_grad_(False if only_vision else True)
 
-        self.real_prompts = clip.tokenize(real_prompts).cuda()
-        self.fake_prompts = clip.tokenize(fake_prompts).cuda()
+        self.register_buffer("real_prompts", clip.tokenize(real_prompts))
+        self.register_buffer("fake_prompts", clip.tokenize(fake_prompts))
 
         # variables for itereating over prompts when using multiple per class when training
         self.real_len, self.fake_len = len(real_prompts) - 1, len(fake_prompts) - 1
         self.curr_real_idx, self.curr_fake_idx = 0, 0
 
         # these are used for the testing step
-        self.prompt_feats = clip.tokenize(real_prompts + fake_prompts).cuda()
+        self.register_buffer("prompt_feats", clip.tokenize(real_prompts + fake_prompts))
         self.prompt_split = len(real_prompts)
 
         # we always expect the real sample first and the fake one second
-        self.labels = torch.tensor([0, 1]).cuda()
+        self.register_buffer("labels", torch.tensor([0, 1]))
         self.topk = topk
 
-        self.class_weights = torch.tensor(class_weights, dtype=torch.float16).cuda()
+        self.register_buffer("class_weights", torch.tensor(class_weights, dtype=torch.float16))
 
         self.contrastive_margin = contrastive_margin
         if contrastive_margin is not None:
-            self.contrastive_target = torch.tensor([1]).cuda()
+            self.register_buffer("contrastive_target", torch.tensor([1]))
             self.contrastive_loss = CosineEmbeddingLoss(
                 margin=contrastive_margin, reduction="none"
             )
@@ -151,7 +151,7 @@ class CLIPLightning(L.LightningModule):
         Will log the gradients per layer in tensorboard.
         """
         norms = grad_norm(self.model, norm_type=2)
-        self.log_dict(norms)
+        self.log_dict(norms, sync_dist=True)
 
     def training_step(self, batch, batch_idx) -> torch.tensor:
         """
@@ -200,6 +200,7 @@ class CLIPLightning(L.LightningModule):
                     "loss/train_total_loss": clip_loss + contrastive_loss,
                 },
                 prog_bar=True,
+                sync_dist=True,
             )
 
             return clip_loss + contrastive_loss
@@ -207,6 +208,7 @@ class CLIPLightning(L.LightningModule):
         self.log_dict(
             {"loss/train_clip_loss": clip_loss},
             prog_bar=True,
+            sync_dist=True,
         )
 
         return clip_loss
@@ -256,6 +258,7 @@ class CLIPLightning(L.LightningModule):
                     "loss/val_total_loss": clip_loss + contrastive_loss,
                 },
                 prog_bar=True,
+                sync_dist=True,
             )
 
         self.log_dict(
@@ -263,6 +266,7 @@ class CLIPLightning(L.LightningModule):
                 "loss/val_clip_loss": clip_loss,
             },
             prog_bar=True,
+            sync_dist=True,
         )
 
         for img_couple in img_logits:
@@ -277,7 +281,7 @@ class CLIPLightning(L.LightningModule):
             "auc/val": self.auc_fn.compute(),
             "acc/val": self.acc_fn.compute(),
         }
-        self.log_dict(stats)
+        self.log_dict(stats, sync_dist=True)
 
         self.acc_fn.reset()
         self.auc_fn.reset()
@@ -323,7 +327,7 @@ class CLIPLightning(L.LightningModule):
             "tp/fake": scorer_stats[2],
             "fp/fake": scorer_stats[3],
         }
-        self.log_dict(stats)
+        self.log_dict(stats, sync_dist=True,)
 
         self.acc_fn.reset()
         self.auc_fn.reset()
