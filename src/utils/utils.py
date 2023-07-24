@@ -37,6 +37,7 @@ def create_lighning_model(opts: Namespace) -> L.LightningModule:
         only_vision=opts.only_vision,
         contrastive_margin=opts.contrastive_margin,
         topk=opts.topk,
+        class_weights=opts.class_weights,
         use_scheduler=opts.use_scheduler,
         sched_step_per_epoch=opts.sched_step_per_epoch,
         first_cycle_steps=opts.first_cycle_steps,

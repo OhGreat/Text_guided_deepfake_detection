@@ -20,28 +20,38 @@ if __name__ == "__main__":
     print(f"Saving current results in {opts.eval_file}")
 
     # prepare results file
-    with open(opts.eval_file, 'a') as file:
+    with open(opts.eval_file, "a") as file:
         csvwriter = csv.writer(file)
-        csvwriter.writerow(["dataset", "AUC", "accuracy",
-                           "precision", "recall", "tp", "fp", "tn", "fn"])
+        csvwriter.writerow(
+            [
+                "dataset",
+                "AUC",
+                "accuracy",
+                "precision",
+                "recall",
+                "tp",
+                "fp",
+                "tn",
+                "fn",
+            ]
+        )
 
     # open file with datasets structure
     with open(opts.data_paths) as d:
         data_paths = json.load(d)
 
     for name, paths in data_paths.items():
-
         # fix datasets in options
         opts.real_eval = paths["real"]
-        opts.fake_eval = paths['fake']
+        opts.fake_eval = paths["fake"]
 
         # run evaluation
         results = main(opts)[0]
 
         # log results
-        to_append = {'name': name}
+        to_append = {"name": name}
         to_append.update(results)
 
-        with open(opts.eval_file, 'a') as file:
+        with open(opts.eval_file, "a") as file:
             csvwriter = csv.DictWriter(file, fieldnames=list(to_append.keys()))
             csvwriter.writerow(to_append)

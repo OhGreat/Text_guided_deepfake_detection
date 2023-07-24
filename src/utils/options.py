@@ -12,6 +12,7 @@ def get_opts() -> argparse.Namespace:
     parser.add_argument("--topk", type=int, default=None, help="Top k elements to consider during inference of multidescription experiments.")
     
     # CLIP training options
+    parser.add_argument("--class_weights", nargs="+", type=float, default=[0.5, 0.5], help="Weights of class.")
     parser.add_argument("--clip_from_scratch", action='store_true', help="Don't load CLIP pretrained weights when used.")
     parser.add_argument("--contrastive_margin", type=float, default=None, help="Margin for contrastive loss term. If None, no contrastive loss term will be used.")
     parser.add_argument("--only_vision", action='store_true', help="Freeze text encoder and only train vision part of CLIP.")
