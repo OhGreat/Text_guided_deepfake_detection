@@ -206,18 +206,12 @@ def evaluate(
     # Load model weights with interpolation possibility
     if opts.resume is not None:
         weights = torch.load(opts.resume)
-        # FIX to evaluate older configurations
-        if "fake_prompts" not in weights["state_dict"].keys():
-            weights["state_dict"]["fake_prompts"] = torch.randint(0,1,size=(1,77))
-            weights["state_dict"]["real_prompts"] = torch.randint(0,1,size=(1,77))
-            weights["state_dict"]["prompt_feats"] = torch.randint(0,1,size=(2,77))
-            weights["state_dict"]["labels"] = torch.tensor([0,1], dtype=torch.int)
-            weights["state_dict"]["class_weights"] = torch.tensor([1.,0.5], dtype=torch.float16)
 
         l_model.load_state_dict(weights["state_dict"])
-        weights = l_model.model.state_dict()
 
         if opts.interpolate != "None":
+            weights = l_model.model.state_dict()
+
             opts.interpolate = float(opts.interpolate)
 
             print("Interpolating finetuned weights with zero shot weights.")

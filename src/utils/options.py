@@ -22,7 +22,7 @@ def get_opts() -> argparse.Namespace:
     # Generic training options
     parser.add_argument("--epochs", type=int, default=1000, help="Maximum number of epochs to train for.")
     parser.add_argument("--early_stop", type=int, default=5, help="Stop the training if the validation loss does not decrease in the number of defined steps.")
-    parser.add_argument("--mixed_precision", type=int, default=32, help="32 or 16 bit precision")
+    parser.add_argument("--mixed_precision", type=str, default='32', help="32 or 16 bit precision")
     parser.add_argument("--seed", type=int, default=0)
 
     # Optimizer and scheduler for training options

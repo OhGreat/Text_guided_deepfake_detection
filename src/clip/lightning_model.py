@@ -83,12 +83,12 @@ class CLIPLightning(L.LightningModule):
 
         self.register_buffer("class_weights", torch.tensor(class_weights, dtype=torch.float16))
 
+        # contrastive loss
         self.contrastive_margin = contrastive_margin
-        if contrastive_margin is not None:
-            self.register_buffer("contrastive_target", torch.tensor([1]))
-            self.contrastive_loss = CosineEmbeddingLoss(
-                margin=contrastive_margin, reduction="none"
-            )
+        self.register_buffer("contrastive_target", torch.tensor([1]))
+        self.contrastive_loss = CosineEmbeddingLoss(
+            margin=contrastive_margin, reduction="none"
+        )
 
         # optimizer parameters
         self.lr = lr
