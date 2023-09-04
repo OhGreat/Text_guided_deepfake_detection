@@ -74,6 +74,18 @@ def load_model_from_lightning_ckpt(
     for key in list(loaded["state_dict"].keys()):
         loaded["state_dict"][key.split(".", 1)[-1]] = loaded["state_dict"].pop(key)
 
+    # remove keys from Lightning model ckpt used for training
+    for key in [
+            'real_prompts',
+            'fake_prompts',
+            'prompt_feats',
+            'labels',
+            'class_weights',
+            'contrastive_target',
+        ]:
+        if key in loaded['state_dict']:
+            del loaded['state_dict'][key]
+
     model, vision_transforms = clip.load(
         name=model_name,
         download_root=clip_orig_path,

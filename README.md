@@ -36,9 +36,12 @@ For using the `multi_evaluator.py` script, a file with the dataset paths is requ
 ```python
 import torch
 from PIL import Image
+
 from src.clip import clip
 from src.utils.utils import load_model_from_lightning_ckpt
 
+# model type
+model_name = "model_name"
 # path to lightning model weights
 lightning_ckpt = "path/to/fine-tuned/lightning.ckpt"
 # path to folder of original CLIP weights
@@ -52,6 +55,7 @@ face_img = Image.open("path/to/image.png")
 device = "cuda:0"
 
 model, vision_transforms = load_model_from_lightning_ckpt(
+    model_name=model_name,
     pkg_path=lightning_ckpt,
     clip_orig_path=clip_orig_path,
     device=device
