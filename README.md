@@ -1,6 +1,6 @@
 # Text guided deepfake detection with CLIP
 
-Robust text guided face forgery detector with CLIP. This repository is related to the work done for my Master's thesis during my internship at <a href="https://www.duckduckgoose.ai/">DuckDuckGoose</a>. The method is based on the original CLIP repository found <a href="https://github.com/openai/CLIP">here</a>.
+Robust text guided face forgery detector with CLIP. This repository is related to the work done for my Master's thesis during my internship at <a href="https://www.duckduckgoose.ai/">DuckDuckGoose</a>. The method is an adaptation of the original CLIP method introduced in [Learning Transferable Visual Models From Natural Language Supervision](https://arxiv.org/abs/2103.00020). The code is based on the original repository found <a href="https://github.com/openai/CLIP">here</a>.
 
 ## Install
 The repository requires a `Python 3.10.8` installation with the packages specified in the `requirements.txt` file.
