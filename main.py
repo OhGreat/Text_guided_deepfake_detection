@@ -226,7 +226,7 @@ def evaluate(
                 for key in zero_shot_w.keys()
             }
 
-        l_model.model.load_state_dict(weights)
+            l_model.model.load_state_dict(weights)
 
     stats = trainer.test(
         model=l_model,
