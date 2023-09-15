@@ -33,7 +33,7 @@ def get_opts() -> argparse.Namespace:
     parser.add_argument("--first_cycle_steps", type=int, default=None, help="Number of steps for the first cycle. (Warmup + cosine annealing)")
     parser.add_argument("--warmup_steps", type=int, default=None, help="Number of warmup steps before reaching the target learning rate.")
     parser.add_argument("--gamma", type=float, default=0.5, help="Multiplier for the max learning rate after 1 cycle.")
-    parser.add_argument("--min_lr", type=int, default=None, help="Minimum learning rate reachable by scheduler.")
+    parser.add_argument("--min_lr", type=float, default=None, help="Minimum learning rate reachable by scheduler.")
     parser.add_argument("--gradient_clip_val", type=float, default=None, help="Gradient clipping value")
 
     # Dataset options
